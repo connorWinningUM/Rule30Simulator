@@ -6,7 +6,7 @@ isFullscreen = true
 targetFPS = 60
 
 [simulation]
-simDepth = 200
+simDepth = 100
 
 [render]
 primaryColor = [ 3, 90, 252 ]

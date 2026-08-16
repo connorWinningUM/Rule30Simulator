@@ -1,6 +1,5 @@
 #include "raylib.h"
 #include <rendering.h>
-#include <print>
 
 void render::createWindow(windowParameters params) {
     SetTargetFPS(params.targetFPS);

@@ -1,5 +1,7 @@
 # Rule30 Simulator
 This project is a C++ application that simulates and visualizes Wolfram's Rule 30, a one-dimensional cellular automaton. The visualization is rendered using the Raylib library, and all simulation and rendering parameters are configurable through a TOML file.
+![960 rows](assets/exampleFull.png)
+![100 rows](assets/example100.png)
 
 ## Features
 -   Generates a Rule 30 cellular automaton pattern.
