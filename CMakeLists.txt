@@ -32,8 +32,20 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
+FetchContent_Declare(
+    raygui
+    GIT_REPOSITORY https://github.com/raysan5/raygui.git
+    GIT_TAG        5.0
+)
+FetchContent_MakeAvailable(raygui)
+
 target_link_libraries(Rule30
     PRIVATE 
         raylib
         tomlplusplus::tomlplusplus
+)
+
+target_include_directories(Rule30
+    PRIVATE
+    ${raygui_SOURCE_DIR}/src
 )
