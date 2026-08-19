@@ -37,6 +37,11 @@ std::optional<std::vector<bool>> simulation::simulator::step() {
     return newLine;
 }
 
+void simulation::simulator::run() {
+    grid = {{true}};
+    while(step()) {};
+}
+
 bool simulation::simulator::evalRule(bool p, bool q, bool r) {
     return p ^ (q | r);
 }

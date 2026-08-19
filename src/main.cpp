@@ -25,8 +25,18 @@ int main() {
     render::createWindow(windowParams);
 
     simulation::simulator sim;
-    while(sim.step()) {};
+    sim.run();
     
-    render::drawMain(renderParams, sim.getGrid());
+    int prevSimDepth = simulation::simDepth;
+    while(!WindowShouldClose()) {
+        if(simulation::simDepth != prevSimDepth) {
+            std::println("SimDepth: {}", simulation::simDepth);
+            sim.run();
+            prevSimDepth = simulation::simDepth;
+        }
+
+        render::drawMain(renderParams, sim.getGrid());
+    }
+
     CloseWindow();
 }

@@ -36,14 +36,11 @@ void render::drawMain(render::renderParameters renderParams, std::vector<std::ve
     gridArea.x = 0;
     gridArea.y = margin;
 
-    while(!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(renderParams.bg);
-        ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-        render::drawGrid(mainGrid, renderParams, gridArea);
-        render::drawUI();
-        EndDrawing();
-    }
+    BeginDrawing();
+    ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+    render::drawGrid(mainGrid, renderParams, gridArea);
+    render::drawUI();
+    EndDrawing();
 }
 
 void render::drawUI() {
@@ -52,8 +49,17 @@ void render::drawUI() {
     transform.y = 10;
     transform.height = GetScreenHeight() / 12.0f;
     transform.width = GetScreenWidth() - (2*transform.x);
+    int bottomMargin = 20;
 
     GuiLine(Rectangle(transform.x, transform.y + transform.height, transform.width, 1), "Settings");
+    GuiSpinner(
+        Rectangle(transform.x, transform.y, transform.width/20, transform.height - bottomMargin),
+        "",
+        &simulation::simDepth,
+        0,
+        9999,
+        true
+    );
 }
 
 void render::drawGrid(const std::vector<std::vector<bool>>& grid, render::renderParameters renderParams) {

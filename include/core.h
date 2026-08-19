@@ -5,7 +5,6 @@
 #include <optional>
 
 namespace simulation {
-    const int MAX_SIM_DEPTH = 960;
     inline int simDepth = 200;
     class simulator {
         public:
@@ -14,6 +13,7 @@ namespace simulation {
             };
 
             std::optional<std::vector<bool>> step();
+            void run();
             const std::vector<std::vector<bool>>& getGrid() const;
 
         
