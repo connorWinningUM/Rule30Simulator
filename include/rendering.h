@@ -26,7 +26,7 @@ namespace render {
     void loadJungleTheme();
     void initUI();
     void drawUI();
-    void drawStatistics(Vector2 pos, const simulation::statistics& stats);
+    void drawStatistics(Rectangle statsArea, const simulation::statistics& stats);
 
     void drawGrid(
         const std::vector<std::vector<bool>>& grid,

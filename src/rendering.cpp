@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <format>
 #include <print>
 #include <rendering.h>
 #include <core.h>
@@ -41,8 +42,8 @@ void render::drawMain(render::renderParameters renderParams, const std::vector<s
     render::drawGrid(mainGrid, renderParams, gridArea);
     render::drawUI();
 
-    Vector2 statsPos(GetScreenWidth() - 200, GetScreenHeight() - 400);
-    render::drawStatistics(statsPos, stats);
+    Rectangle statsArea(GetScreenWidth() - 230, GetScreenHeight()/2.0, 220, 200);
+    render::drawStatistics(statsArea, stats);
     EndDrawing();
 }
 
@@ -97,6 +98,18 @@ void render::drawGrid( const std::vector<std::vector<bool>>& grid, render::rende
     }
 }
 
-void render::drawStatistics(Vector2 pos, const simulation::statistics& stats) {
-    return;
+void render::drawStatistics(Rectangle statsArea, const simulation::statistics& stats) {
+    DrawRectangleRec(statsArea, Color(0, 0, 0, 124));
+    GuiLabel(
+        Rectangle(statsArea.x+10, statsArea.y+10, statsArea.width-20, 20),
+        std::format("Total Sim Time: {:.4f}ms", stats.totalSimTime).c_str()
+    );
+    GuiLabel(
+        Rectangle(statsArea.x+10, statsArea.y+40, statsArea.width-20, 20),
+        std::format("Average Row Sim Time: {:.4f}ms", stats.avgRowTime).c_str()
+    );
+    GuiLabel(
+        Rectangle(statsArea.x+10, statsArea.y+70, statsArea.width-20, 20),
+        std::format("Num Of Rule Checks: {}", stats.numRuleChecks).c_str()
+    );
 }

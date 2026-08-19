@@ -2,11 +2,12 @@
 #include <optional>
 #include <vector>
 #include <ranges>
+#include <chrono>
+#include <print>
 
 //for (auto [left, center, right] : grid[step] | std::views::adjacent<3>)
 
 std::optional<std::vector<bool>> simulation::simulator::step() {
-    // grid[step] is the curr line
     if( grid.size() >= simulation::simDepth )
         return std::nullopt;
 
@@ -39,10 +40,20 @@ std::optional<std::vector<bool>> simulation::simulator::step() {
 
 void simulation::simulator::run() {
     grid = {{true}};
+    stats.numRuleChecks = 0;
+
+    auto start_time = std::chrono::high_resolution_clock::now();
     while(step()) {};
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    auto start = std::chrono::time_point_cast<std::chrono::microseconds>(start_time).time_since_epoch().count();
+    auto end = std::chrono::time_point_cast<std::chrono::microseconds>(end_time).time_since_epoch().count();
+    stats.totalSimTime = (end - start) * 0.001;
+    stats.avgRowTime = stats.totalSimTime / grid.size();
 }
 
 bool simulation::simulator::evalRule(bool p, bool q, bool r) {
+    stats.numRuleChecks++;
     return p ^ (q | r);
 }
 

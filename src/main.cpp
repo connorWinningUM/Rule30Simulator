@@ -30,7 +30,6 @@ int main() {
     int prevSimDepth = simulation::simDepth;
     while(!WindowShouldClose()) {
         if(simulation::simDepth != prevSimDepth) {
-            std::println("SimDepth: {}", simulation::simDepth);
             sim.run();
             prevSimDepth = simulation::simDepth;
         }
