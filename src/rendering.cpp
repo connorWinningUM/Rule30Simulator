@@ -26,7 +26,7 @@ void render::createWindow(windowParameters params) {
     SetTargetFPS(params.targetFPS);
 }
 
-void render::drawMain(render::renderParameters renderParams, std::vector<std::vector<bool>> mainGrid) {
+void render::drawMain(render::renderParameters renderParams, const std::vector<std::vector<bool>>& mainGrid, const simulation::statistics& stats) {
     GuiLoadStyleJungle();
     
     Rectangle gridArea;
@@ -40,6 +40,9 @@ void render::drawMain(render::renderParameters renderParams, std::vector<std::ve
     ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
     render::drawGrid(mainGrid, renderParams, gridArea);
     render::drawUI();
+
+    Vector2 statsPos(GetScreenWidth() - 200, GetScreenHeight() - 400);
+    render::drawStatistics(statsPos, stats);
     EndDrawing();
 }
 
@@ -60,30 +63,6 @@ void render::drawUI() {
         9999,
         true
     );
-}
-
-void render::drawGrid(const std::vector<std::vector<bool>>& grid, render::renderParameters renderParams) {
-    if (grid.empty()) return;
-
-    int cellSize = GetScreenWidth() / grid.back().size();
-    int screenWidth = GetScreenWidth();
-    int currentRowY = 0;
-
-    for (const auto& row : grid) {
-        int rowWidth = static_cast<int>(row.size());
-        int totalRowWidthPixels = rowWidth * cellSize;
-        
-        int currentX = (screenWidth / 2) - (totalRowWidthPixels / 2);
-
-        for (bool val : row) {
-            Color cellColor = val ? renderParams.primary : renderParams.secondary;
-            DrawRectangle(currentX, currentRowY, cellSize, cellSize, cellColor);
-            
-            currentX += cellSize;
-        }
-
-        currentRowY += cellSize;
-    }
 }
 
 void render::drawGrid( const std::vector<std::vector<bool>>& grid, render::renderParameters renderParams, Rectangle bounds ) {
@@ -116,6 +95,8 @@ void render::drawGrid( const std::vector<std::vector<bool>>& grid, render::rende
 
         cell.y += cell.height;
     }
+}
 
-
+void render::drawStatistics(Vector2 pos, const simulation::statistics& stats) {
+    return;
 }

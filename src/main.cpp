@@ -35,7 +35,7 @@ int main() {
             prevSimDepth = simulation::simDepth;
         }
 
-        render::drawMain(renderParams, sim.getGrid());
+        render::drawMain(renderParams, sim.getGrid(), sim.getStatistics());
     }
 
     CloseWindow();

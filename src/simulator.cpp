@@ -49,3 +49,7 @@ bool simulation::simulator::evalRule(bool p, bool q, bool r) {
 const std::vector<std::vector<bool>>& simulation::simulator::getGrid() const {
     return grid;
 }
+
+const simulation::statistics& simulation::simulator::getStatistics() const {
+    return stats;
+}

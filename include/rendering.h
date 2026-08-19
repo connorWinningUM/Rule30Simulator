@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <vector>
 #include <raygui.h>
+#include <core.h>
 
 namespace render {
     struct windowParameters {
@@ -19,17 +20,13 @@ namespace render {
     };
 
     void createWindow(windowParameters params);
-    void drawMain(renderParameters renderParams, std::vector<std::vector<bool>> mainGrid);
+    void drawMain(renderParameters renderParams, const std::vector<std::vector<bool>>& mainGrid, const simulation::statistics& stats);
 
     inline float sliderValue = 0.0f;
     void loadJungleTheme();
     void initUI();
     void drawUI();
-
-    void drawGrid(
-        const std::vector<std::vector<bool>>& grid, 
-        renderParameters renderParams
-    );
+    void drawStatistics(Vector2 pos, const simulation::statistics& stats);
 
     void drawGrid(
         const std::vector<std::vector<bool>>& grid,
