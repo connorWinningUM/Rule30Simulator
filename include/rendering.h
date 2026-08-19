@@ -28,5 +28,6 @@ namespace render {
     void drawUI();
     void drawStatistics(Rectangle statsArea, const simulation::statistics& stats);
 
+    inline int prevGridDepth = -1;
     void drawGrid( const std::vector<std::vector<bool>>& grid, Rectangle bounds );
 }

@@ -38,8 +38,13 @@ void render::drawMain(const std::vector<std::vector<bool>>& mainGrid, simulation
 
     auto start_time = std::chrono::high_resolution_clock::now();
     BeginDrawing();
-    ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-    render::drawGrid(mainGrid, gridArea);
+
+    if( render::prevGridDepth != mainGrid.size() ) {
+        ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+        render::drawGrid(mainGrid, gridArea);
+        render::prevGridDepth = mainGrid.size();
+    }
+    
     render::drawUI();
 
     Rectangle statsArea(GetScreenWidth() - 230, GetScreenHeight()/2.0, 220, 200);
@@ -125,6 +130,6 @@ void render::drawStatistics(Rectangle statsArea, const simulation::statistics& s
     );
     GuiLabel(
         Rectangle(statsArea.x+margin, statsArea.y+margin+3*labelHeight, statsArea.width-(2*margin), labelHeight),
-        std::format("Render Time: {}", stats.renderTime).c_str()
+        std::format("Render Time: {:.4f}ms", stats.renderTime).c_str()
     );
 }
