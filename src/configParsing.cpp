@@ -11,27 +11,3 @@ render::windowParameters parseWindowParams(toml::table& config) {
     windowParams.targetFPS = config["window"]["targetFPS"].value_or(60);
     return windowParams;
 }
-
-render::renderParameters getRenderParams(toml::table& config) {
-    render::renderParameters renderParams;
-
-    renderParams.primary = GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_FOCUSED));
-
-    Color secondary( 
-        config["render"]["secondaryColor"][0].value_or(0),
-        config["render"]["secondaryColor"][1].value_or(0),
-        config["render"]["secondaryColor"][2].value_or(0),
-        255
-    );
-    renderParams.secondary = secondary;
-
-    Color bgColor(
-        config["render"]["bgColor"][0].value_or(0),
-        config["render"]["bgColor"][1].value_or(0),
-        config["render"]["bgColor"][2].value_or(0),
-        255
-    );
-    renderParams.bg = bgColor;
-
-    return renderParams;
-}

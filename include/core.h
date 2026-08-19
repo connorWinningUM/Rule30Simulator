@@ -9,6 +9,7 @@ namespace simulation {
 
     struct statistics {
         float totalSimTime = 0.0f;
+        float renderTime = 0.0f;
         float avgRowTime = 0.0f;
         size_t numRuleChecks = 0;
     };
@@ -23,6 +24,7 @@ namespace simulation {
 
             const std::vector<std::vector<bool>>& getGrid() const;
             const statistics& getStatistics() const;
+            void setStatistics(const statistics& m_stats);
         
         private:
             std::vector<std::vector<bool>> grid;

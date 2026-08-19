@@ -5,6 +5,7 @@
 #include <print>
 #include <toml++/toml.hpp>
 #include <configParsing.h>
+#include <styles/style_jungle.h>
 
 int main() {
 
@@ -15,14 +16,10 @@ int main() {
         std::println(stderr, "Config Parsing Failed:\n{}" , err.what());
         return 1;
     }
-
-    // retreives window params using value_or() which is passed the default value
     render::windowParameters windowParams = parseWindowParams(config);
 
-    const int SELECTED_DEPTH = config["simulation"]["simDepth"].value_or(100);
-    render::renderParameters renderParams = getRenderParams(config);
-
     render::createWindow(windowParams);
+    GuiLoadStyleJungle();
 
     simulation::simulator sim;
     sim.run();
@@ -34,7 +31,9 @@ int main() {
             prevSimDepth = simulation::simDepth;
         }
 
-        render::drawMain(renderParams, sim.getGrid(), sim.getStatistics());
+        simulation::statistics updatedStats(sim.getStatistics());
+        render::drawMain( sim.getGrid(), updatedStats );
+        sim.setStatistics(updatedStats);
     }
 
     CloseWindow();

@@ -3,5 +3,3 @@
 #include <toml++/toml.hpp>
 
 render::windowParameters parseWindowParams(toml::table& config);
-
-render::renderParameters getRenderParams(toml::table& config);

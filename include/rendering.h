@@ -20,7 +20,7 @@ namespace render {
     };
 
     void createWindow(windowParameters params);
-    void drawMain(renderParameters renderParams, const std::vector<std::vector<bool>>& mainGrid, const simulation::statistics& stats);
+    void drawMain(const std::vector<std::vector<bool>>& mainGrid, simulation::statistics& stats);
 
     inline float sliderValue = 0.0f;
     void loadJungleTheme();
@@ -28,9 +28,5 @@ namespace render {
     void drawUI();
     void drawStatistics(Rectangle statsArea, const simulation::statistics& stats);
 
-    void drawGrid(
-        const std::vector<std::vector<bool>>& grid,
-        renderParameters renderParams,
-        Rectangle bounds
-    );
+    void drawGrid( const std::vector<std::vector<bool>>& grid, Rectangle bounds );
 }

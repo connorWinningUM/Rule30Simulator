@@ -4,6 +4,7 @@
 #include <rendering.h>
 #include <core.h>
 #include <styles/style_jungle.h>
+#include <chrono>
 
 void render::initUI() {
     render::loadJungleTheme(); // Applies the Jungle palette cleanly
@@ -27,9 +28,7 @@ void render::createWindow(windowParameters params) {
     SetTargetFPS(params.targetFPS);
 }
 
-void render::drawMain(render::renderParameters renderParams, const std::vector<std::vector<bool>>& mainGrid, const simulation::statistics& stats) {
-    GuiLoadStyleJungle();
-    
+void render::drawMain(const std::vector<std::vector<bool>>& mainGrid, simulation::statistics& stats) {
     Rectangle gridArea;
     int margin = 100;
     gridArea.width = GetScreenWidth();
@@ -37,14 +36,20 @@ void render::drawMain(render::renderParameters renderParams, const std::vector<s
     gridArea.x = 0;
     gridArea.y = margin;
 
+    auto start_time = std::chrono::high_resolution_clock::now();
     BeginDrawing();
     ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
-    render::drawGrid(mainGrid, renderParams, gridArea);
+    render::drawGrid(mainGrid, gridArea);
     render::drawUI();
 
     Rectangle statsArea(GetScreenWidth() - 230, GetScreenHeight()/2.0, 220, 200);
     render::drawStatistics(statsArea, stats);
     EndDrawing();
+    auto end_time = std::chrono::high_resolution_clock::now();
+
+    auto start = std::chrono::time_point_cast<std::chrono::microseconds>(start_time).time_since_epoch().count();
+    auto end = std::chrono::time_point_cast<std::chrono::microseconds>(end_time).time_since_epoch().count();
+    stats.renderTime = (end - start) * 0.001;
 }
 
 void render::drawUI() {
@@ -54,6 +59,7 @@ void render::drawUI() {
     transform.height = GetScreenHeight() / 12.0f;
     transform.width = GetScreenWidth() - (2*transform.x);
     int bottomMargin = 20;
+    int labelBottomMargin = 15;
 
     GuiLine(Rectangle(transform.x, transform.y + transform.height, transform.width, 1), "Settings");
     GuiSpinner(
@@ -64,9 +70,12 @@ void render::drawUI() {
         9999,
         true
     );
+    GuiLabel(Rectangle(transform.x + 12, transform.y + transform.height - labelBottomMargin, transform.width/20, 10), "Sim Depth");
+
+
 }
 
-void render::drawGrid( const std::vector<std::vector<bool>>& grid, render::renderParameters renderParams, Rectangle bounds ) {
+void render::drawGrid( const std::vector<std::vector<bool>>& grid, Rectangle bounds ) {
     if (grid.empty()) return;
 
     Rectangle cell;
@@ -88,7 +97,7 @@ void render::drawGrid( const std::vector<std::vector<bool>>& grid, render::rende
         cell.x = center - (rowWidth / 2.0 * cell.width);
 
         for (bool val : row) {
-            Color cellColor = val ? renderParams.primary : Color(0);
+            Color cellColor = val ? GetColor(GuiGetStyle(DEFAULT, BASE_COLOR_PRESSED)) : Color(0);
             DrawRectangleRec(cell, cellColor);
             
             cell.x += cell.width;
@@ -100,16 +109,22 @@ void render::drawGrid( const std::vector<std::vector<bool>>& grid, render::rende
 
 void render::drawStatistics(Rectangle statsArea, const simulation::statistics& stats) {
     DrawRectangleRec(statsArea, Color(0, 0, 0, 124));
+    int margin = 10;
+    int labelHeight = 30;
     GuiLabel(
-        Rectangle(statsArea.x+10, statsArea.y+10, statsArea.width-20, 20),
+        Rectangle(statsArea.x+margin, statsArea.y+margin, statsArea.width-(2*margin), labelHeight),
         std::format("Total Sim Time: {:.4f}ms", stats.totalSimTime).c_str()
     );
     GuiLabel(
-        Rectangle(statsArea.x+10, statsArea.y+40, statsArea.width-20, 20),
+        Rectangle(statsArea.x+margin, statsArea.y+margin+labelHeight, statsArea.width-(2*margin), labelHeight),
         std::format("Average Row Sim Time: {:.4f}ms", stats.avgRowTime).c_str()
     );
     GuiLabel(
-        Rectangle(statsArea.x+10, statsArea.y+70, statsArea.width-20, 20),
+        Rectangle(statsArea.x+margin, statsArea.y+margin+2*labelHeight, statsArea.width-(2*margin), labelHeight),
         std::format("Num Of Rule Checks: {}", stats.numRuleChecks).c_str()
+    );
+    GuiLabel(
+        Rectangle(statsArea.x+margin, statsArea.y+margin+3*labelHeight, statsArea.width-(2*margin), labelHeight),
+        std::format("Render Time: {}", stats.renderTime).c_str()
     );
 }

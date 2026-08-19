@@ -3,9 +3,6 @@
 #include <vector>
 #include <ranges>
 #include <chrono>
-#include <print>
-
-//for (auto [left, center, right] : grid[step] | std::views::adjacent<3>)
 
 std::optional<std::vector<bool>> simulation::simulator::step() {
     if( grid.size() >= simulation::simDepth )
@@ -24,6 +21,7 @@ std::optional<std::vector<bool>> simulation::simulator::step() {
     newLine[0] = evalRule(false, false, grid.back()[0]);
     newLine[1] = evalRule(false, grid.back()[0], grid.back()[1]);
 
+    // core loop
     int count = 2;
     for (auto [left, center, right] : grid.back() | std::views::adjacent<3>) {
         newLine[count] = evalRule(left, center, right);
@@ -63,4 +61,8 @@ const std::vector<std::vector<bool>>& simulation::simulator::getGrid() const {
 
 const simulation::statistics& simulation::simulator::getStatistics() const {
     return stats;
+}
+
+void simulation::simulator::setStatistics(const statistics& m_stats) {
+    stats = m_stats;
 }

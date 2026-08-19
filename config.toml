@@ -4,11 +4,3 @@ width = 1820
 title = "Rule30 Simulation"
 isFullscreen = false
 targetFPS = 60
-
-[simulation]
-simDepth = 100
-
-[render]
-primaryColor = [ 0, 0, 0 ]
-secondaryColor = [ 0, 0, 0]
-bgColor = [52, 105, 78]
