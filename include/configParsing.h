@@ -4,4 +4,4 @@
 
 render::windowParameters parseWindowParams(toml::table& config);
 
-render::renderParameters parseRenderParams(toml::table& config);
+render::renderParameters getRenderParams(toml::table& config);

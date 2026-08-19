@@ -1,14 +1,62 @@
 #include "raylib.h"
+#include <print>
 #include <rendering.h>
+#include <core.h>
+#include <styles/style_jungle.h>
 
-void render::createWindow(windowParameters params) {
-    SetTargetFPS(params.targetFPS);
-    if( params.isFullscreen )
-        SetConfigFlags(FLAG_FULLSCREEN_MODE);
-    InitWindow(params.width, params.height, params.title);
+void render::initUI() {
+    render::loadJungleTheme(); // Applies the Jungle palette cleanly
 }
 
-void render::drawGrid(const std::vector<std::vector<bool>>& grid, Color primary, Color secondary) {
+void render::createWindow(windowParameters params) {
+    InitWindow(params.width, params.height, params.title);
+
+    if( params.isFullscreen ) {
+        SetConfigFlags(FLAG_WINDOW_UNDECORATED);
+        int currentMonitor = GetCurrentMonitor();
+        SetWindowPosition(
+            GetMonitorPosition(currentMonitor).x,
+            GetMonitorPosition(currentMonitor).y
+        );
+        SetWindowSize(
+            GetMonitorWidth(currentMonitor),
+            GetMonitorHeight(currentMonitor)
+        );
+    }
+    SetTargetFPS(params.targetFPS);
+}
+
+void render::drawMain(render::renderParameters renderParams, std::vector<std::vector<bool>> mainGrid) {
+    GuiLoadStyleJungle();
+    
+    Rectangle gridArea;
+    int margin = 100;
+    gridArea.width = GetScreenWidth();
+    gridArea.height = GetScreenHeight() - (margin);
+    gridArea.x = 0;
+    gridArea.y = margin;
+
+    while(!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(renderParams.bg);
+        ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+        render::drawGrid(mainGrid, renderParams, gridArea);
+        render::drawUI();
+        EndDrawing();
+    }
+}
+
+void render::drawUI() {
+    Rectangle transform;
+    transform.x = 10;
+    transform.y = 10;
+    transform.height = GetScreenHeight() / 12.0f;
+    transform.width = GetScreenWidth() - (2*transform.x);
+
+    GuiLine(Rectangle(transform.x, transform.y + transform.height, transform.width, 1), "Settings");
+}
+
+void render::drawGrid(const std::vector<std::vector<bool>>& grid, render::renderParameters renderParams) {
     if (grid.empty()) return;
 
     int cellSize = GetScreenWidth() / grid.back().size();
@@ -22,7 +70,7 @@ void render::drawGrid(const std::vector<std::vector<bool>>& grid, Color primary,
         int currentX = (screenWidth / 2) - (totalRowWidthPixels / 2);
 
         for (bool val : row) {
-            Color cellColor = val ? primary : secondary;
+            Color cellColor = val ? renderParams.primary : renderParams.secondary;
             DrawRectangle(currentX, currentRowY, cellSize, cellSize, cellColor);
             
             currentX += cellSize;
@@ -30,4 +78,38 @@ void render::drawGrid(const std::vector<std::vector<bool>>& grid, Color primary,
 
         currentRowY += cellSize;
     }
+}
+
+void render::drawGrid( const std::vector<std::vector<bool>>& grid, render::renderParameters renderParams, Rectangle bounds ) {
+    if (grid.empty()) return;
+
+    Rectangle cell;
+    cell.width = bounds.width / grid.back().size();
+    cell.height = bounds.height / grid.size();
+    cell.x = 0;
+    cell.y = bounds.y;
+
+    // determine appropiate mipmap size
+    if( (cell.width > 0.5 || cell.height > 0.5) && (cell.width < 1 || cell.height < 1) ) {
+        cell.width = 1;
+        cell.height = 1;
+    }
+
+    for (const auto& row : grid) {
+        int rowWidth = static_cast<int>(row.size());
+        
+        float center = bounds.x + (bounds.width / 2);
+        cell.x = center - (rowWidth / 2.0 * cell.width);
+
+        for (bool val : row) {
+            Color cellColor = val ? renderParams.primary : Color(0);
+            DrawRectangleRec(cell, cellColor);
+            
+            cell.x += cell.width;
+        }
+
+        cell.y += cell.height;
+    }
+
+
 }

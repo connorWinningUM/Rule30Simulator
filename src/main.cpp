@@ -20,19 +20,13 @@ int main() {
     render::windowParameters windowParams = parseWindowParams(config);
 
     const int SELECTED_DEPTH = config["simulation"]["simDepth"].value_or(100);
-    render::renderParameters renderParams = parseRenderParams(config);
+    render::renderParameters renderParams = getRenderParams(config);
 
     render::createWindow(windowParams);
 
-    simulation sim(SELECTED_DEPTH);
+    simulation::simulator sim;
     while(sim.step()) {};
-
-    while(!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(renderParams.bg);
-        render::drawGrid(sim.getGrid(), renderParams.primary, renderParams.secondary);
-        EndDrawing();
-    }
-
+    
+    render::drawMain(renderParams, sim.getGrid());
     CloseWindow();
 }

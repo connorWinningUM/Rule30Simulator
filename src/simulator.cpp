@@ -5,9 +5,9 @@
 
 //for (auto [left, center, right] : grid[step] | std::views::adjacent<3>)
 
-std::optional<std::vector<bool>> simulation::step() {
+std::optional<std::vector<bool>> simulation::simulator::step() {
     // grid[step] is the curr line
-    if( grid.size() >= depth )
+    if( grid.size() >= simulation::simDepth )
         return std::nullopt;
 
     std::vector<bool> newLine(grid.back().size()+2, false);
@@ -37,10 +37,10 @@ std::optional<std::vector<bool>> simulation::step() {
     return newLine;
 }
 
-bool simulation::evalRule(bool p, bool q, bool r) {
+bool simulation::simulator::evalRule(bool p, bool q, bool r) {
     return p ^ (q | r);
 }
 
-const std::vector<std::vector<bool>>& simulation::getGrid() const {
+const std::vector<std::vector<bool>>& simulation::simulator::getGrid() const {
     return grid;
 }

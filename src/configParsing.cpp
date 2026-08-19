@@ -12,16 +12,10 @@ render::windowParameters parseWindowParams(toml::table& config) {
     return windowParams;
 }
 
-render::renderParameters parseRenderParams(toml::table& config) {
+render::renderParameters getRenderParams(toml::table& config) {
     render::renderParameters renderParams;
-    
-    Color primary(
-        config["render"]["primaryColor"][0].value_or(0),
-        config["render"]["primaryColor"][1].value_or(0),
-        config["render"]["primaryColor"][2].value_or(0),
-        255
-    );
-    renderParams.primary = primary;
+
+    renderParams.primary = GetColor(GuiGetStyle(DEFAULT, BORDER_COLOR_FOCUSED));
 
     Color secondary( 
         config["render"]["secondaryColor"][0].value_or(0),
@@ -39,8 +33,5 @@ render::renderParameters parseRenderParams(toml::table& config) {
     );
     renderParams.bg = bgColor;
 
-    renderParams.primary = primary;
-    renderParams.secondary = secondary;
-    renderParams.bg = bgColor;
     return renderParams;
 }

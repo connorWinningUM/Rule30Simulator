@@ -1,20 +1,25 @@
 #pragma once
+#include "raylib.h"
+#include <cstddef>
 #include <vector>
 #include <optional>
 
-class simulation {
-    public:
-        simulation(int depth=0) : depth(depth) {
-            grid.push_back(std::vector<bool>{true});
-        };
+namespace simulation {
+    const int MAX_SIM_DEPTH = 960;
+    inline int simDepth = 200;
+    class simulator {
+        public:
+            simulator() {
+                grid.push_back(std::vector<bool>{true});
+            };
 
-        std::optional<std::vector<bool>> step();
-        const std::vector<std::vector<bool>>& getGrid() const;
+            std::optional<std::vector<bool>> step();
+            const std::vector<std::vector<bool>>& getGrid() const;
 
-    
-    private:
-        int depth;
-        std::vector<std::vector<bool>> grid;
+        
+        private:
+            std::vector<std::vector<bool>> grid;
 
-        bool evalRule(bool p, bool q, bool r);
-};
+            bool evalRule(bool p, bool q, bool r);
+    };
+}
